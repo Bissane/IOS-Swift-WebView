@@ -7,19 +7,33 @@
 //
 
 import UIKit
+import WebKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, WKNavigationDelegate {
 
+    var webView :  WKWebView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        // 1  The webView loads the url using an URLRequest object.
+        let url = URL(string: "https://github.com/soonin")!   // https://github.com/soonin  //http://swiftnetwork.ca
+        webView.load(URLRequest(url: url))
+        
+        // 2  A refresh item is added to the toolbar which will refresh the current webpage.
+        let refresh = UIBarButtonItem(barButtonSystemItem: .refresh, target: webView, action: #selector(webView.reload))
+        toolbarItems = [refresh]
+        navigationController?.isToolbarHidden = false
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func loadView() {
+        webView = WKWebView()
+        webView.navigationDelegate = self
+        view = webView
     }
 
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        title = webView.title
+    }
 
 }
 
